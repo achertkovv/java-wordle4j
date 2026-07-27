@@ -76,7 +76,10 @@ public class WordleGame {
         if (mapHintWords.isEmpty()) result = new ArrayList<>(dictionary.getWords());
         else result = new ArrayList<>(mapHintWords.keySet());
 
-        if (word.isBlank()) word = result.getFirst();
+        if (word.isBlank()) {
+            word = result.getFirst();
+            steps--; //Если слово подходит под правила игры, то количество попыток уменьшается
+        }
         String pattern = analyzeWord(word);
 
         // В словаре вы будете встречать слова с буквами, которые уже не подходят к решению, — их нужно отсеять
