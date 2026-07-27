@@ -81,8 +81,7 @@ public class Wordle {
                 }
                 System.out.println(word);
                 System.out.println(wordleGame.analyzeWord(word));
-            }
-            catch (WordNotFoundInDictionary | WordLengthIsNotValid e) {
+            } catch (WordNotFoundInDictionary | WordLengthIsNotValid e) {
                 System.out.println(e.getMessage());
             }
         }
