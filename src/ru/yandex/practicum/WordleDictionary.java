@@ -1,9 +1,6 @@
 package ru.yandex.practicum;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /*
 этот класс содержит в себе список слов List<String>
@@ -30,12 +27,28 @@ public class WordleDictionary {
         words.add(word);
     }
 
-    public Map<String, Integer> getMapOfWords(String word, String format) {
-        Map<String, Integer> mapOfWords = new LinkedHashMap<>();
-        for (int i = 0; i < format.length(); i++) {
-            if (format.charAt(i) == '+') {
+    public static List<String> containsCharsInTheList(List<String> list, String chars) {
+        List<String> result = new ArrayList<>();
+        Set<Character> distinctChars = new HashSet<>();
+        for (char ch : chars.toCharArray()) {
+            distinctChars.add(ch);
+        }
+        for (char c : distinctChars) {
+            for (String word : list) {
+                if (word.contains(String.valueOf(c)))
+                    result.add(word);
             }
         }
-        return mapOfWords;
+        return result;
+    }
+
+    public static List<String> containsCharsInTheListByIndex(List<String> list, char c, int i) {
+        List<String> result = new ArrayList<>();
+        for (String word : list) {
+            if (word.charAt(i) == c) {
+                result.add(word);
+            }
+        }
+        return result;
     }
 }

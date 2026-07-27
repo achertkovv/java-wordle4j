@@ -2,6 +2,8 @@ package ru.yandex.practicum;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -27,6 +29,8 @@ public class Wordle {
         // Он должен обеспечивать возможность перехвата всех ошибок, возникающих
         // в ваших классах.
         try {
+            //Создайте и используйте лог-файл, запись в который производится через специальный класс PrintWriter.
+            PrintWriter printWriter = new PrintWriter(logFileName);
             // создать загрузчик словарей WordleDictionaryLoader
             WordleDictionaryLoader wordleDictionaryLoader = new WordleDictionaryLoader(wordsFileName);
             // загрузить словарь WordleDictionary с помощью класса WordleDictionaryLoader
@@ -35,17 +39,16 @@ public class Wordle {
             // Количество оставшихся шагов устанавливается равным шести.
             WordleGame wordleGame = new WordleGame(wordleDictionary, 6);
             // вызвать игровой метод в котором в цикле опрашивать пользователя и передавать информацию в игру
-            mainWordleGameCycle(wordleGame);
+            mainWordleGameCycle(wordleGame, printWriter);
             //  в конце для информации выводится загаданное слово.
             if (wordleGame.getSteps() == 0) // у игрока закончились шаги, а слово ещё не отгадано (это проигрыш).
                 System.out.println("Загаданное слово было: " + wordleGame.getAnswer());
         } catch (Exception e) {
             e.printStackTrace();
-            //writeErrorToLogFile(e);
         }
     }
 
-    private static void mainWordleGameCycle(WordleGame wordleGame) {
+    private static void mainWordleGameCycle(WordleGame wordleGame, PrintWriter printWriter) throws IOException {
         Scanner sc = new Scanner(System.in);
         Random random = new Random();
         int randomIndex = random.nextInt(wordleGame.getDictionary().getWords().size());
@@ -57,35 +60,44 @@ public class Wordle {
         System.out.println("Загадал слово!");
         // Игроку доступно шесть попыток (закончились ходы - игра завершается)
         while (wordleGame.getSteps() > 0) {
-            System.out.print("Угадайте слово: ");
-            String word = sc.nextLine();
-            if (word.isBlank() || word.isEmpty())
-                word = wordleGame.hintWord();
-            // Дополнительно вам нужно привести слова к единой
-            // форме в нижнем регистре и заменить букву ё на букву е
-            else
+            try {
+                System.out.print("Угадайте слово: ");
+                String word = sc.nextLine();
+                // Дополнительно вам нужно привести слова к единой
+                // форме в нижнем регистре и заменить букву ё на букву е
                 word = word.toLowerCase().replace("ё", "e");
-            // Дополнительно программа проверяет, что слово соответствует правилам:
-            // состоит из пяти букв и присутствует в словаре. Если слово корректное,
-            // ход засчитывается, иначе программа будет повторно ожидать ввод
-            // правильного слова, и ход засчитан не будет.
-            if (!wordleGame.checkWord(word)) {
-                System.out.println("Введенное слово не соответствует правилам!");
-                continue;
+                // Дополнительно программа проверяет, что слово соответствует правилам:
+                // состоит из пяти букв и присутствует в словаре. Если слово корректное,
+                // ход засчитывается, иначе программа будет повторно ожидать ввод
+                // правильного слова, и ход засчитан не будет.
+                wordleGame.checkWord(word);
+
+                String hintWord = wordleGame.fillHintWords(word);
+                if (word.isBlank()) {
+                    word = hintWord;
+                    printHintWords(wordleGame);
+                }
+
+                if (wordleGame.compareWord(word)) {
+                    System.out.println("Вы угадали слово и выиграли!");
+                    break; // Если слово отгадано, игра завершается. Игрок отгадал слово (это выигрыш);
+                }
+                System.out.println(word);
+                System.out.println(wordleGame.analyzeWord(word));
             }
-            if (wordleGame.compareWord(word)) {
-                System.out.println("Вы угадали слово и выиграли!");
-                break; // Если слово отгадано, игра завершается. Игрок отгадал слово (это выигрыш);
+            catch (WordNotFoundInDictionary | WordLengthIsNotValid e) {
+                System.out.println(e.getMessage());
             }
-            System.out.println(word);
-            System.out.println(wordleGame.analyzeWord(word));
         }
     }
 
-    private static void writeErrorToLogFile(Exception ex) throws IOException {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(logFileName, UTF_8))) {
-            bw.write(LocalDateTime.now() + ": " + ex.toString());
-            bw.newLine();
+    private static void printHintWords(WordleGame wordleGame) {
+        int maxValue = Collections.max(wordleGame.getHintWords().values());
+        System.out.println("Подсказка: ");
+        for (Map.Entry<String, Integer> entry : wordleGame.getHintWords().entrySet()) {
+            if (entry.getValue() == maxValue) {
+                System.out.println(entry.getKey() + " - " + entry.getValue());
+            }
         }
     }
 

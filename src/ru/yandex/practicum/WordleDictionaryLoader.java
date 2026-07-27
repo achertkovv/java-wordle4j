@@ -21,7 +21,7 @@ public class WordleDictionaryLoader {
     }
 
     // Поэтому вам придётся прочитать файл целиком.
-    private List<String> loadWordsFromFileToList() throws FileNotFoundException {
+    private List<String> loadWordsFromFileToList() throws IOException {
         List<String> result = new ArrayList<>();
         // Для чтения строк вам пригодится класс FileReader, настроенный на кодировку UTF-8
         // А для чтения строк из файла рекомендуем использовать BufferedReader.
@@ -30,14 +30,12 @@ public class WordleDictionaryLoader {
             while ((line = fileReader.readLine()) != null) { // Читаем строки до конца файла
                 result.add(line); // Добавляем строку в список
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
         return result;
     }
 
     // и только после этого выбрать из словаря те слова, которые подходят для игры.
-    public WordleDictionary createWordleDictionary() throws FileNotFoundException {
+    public WordleDictionary createWordleDictionary() {
         WordleDictionary wordleDictionary = new WordleDictionary();
         try {
             List<String> wordsFromFile = loadWordsFromFileToList();
@@ -49,7 +47,7 @@ public class WordleDictionaryLoader {
                     wordleDictionary.addWord(word.toLowerCase().replace("ё", "e"));
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return wordleDictionary;
