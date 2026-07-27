@@ -34,7 +34,7 @@ public class WordleDictionaryLoader {
     }
 
     // и только после этого выбрать из словаря те слова, которые подходят для игры.
-    public WordleDictionary createWordleDictionary() {
+    public WordleDictionary createWordleDictionary() throws RuntimeException {
         WordleDictionary wordleDictionary = new WordleDictionary();
         try {
             List<String> wordsFromFile = loadWordsFromFileToList();

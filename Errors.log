@@ -1,2 +1,4 @@
 2026-07-26T16:18:22.924395700: java.lang.StringIndexOutOfBoundsException: Index 5 out of bounds for length 5
 2026-07-27T15:05:37.199061: Введенное слово werty не присутствует в словаре!
+2026-07-27T17:25:26.348655600: wors_ru.txt (Не удается найти указанный файл)
+2026-07-27T19:36:40.933522700: java.io.FileNotFoundException: ords_ru.txt (Не удается найти указанный файл)

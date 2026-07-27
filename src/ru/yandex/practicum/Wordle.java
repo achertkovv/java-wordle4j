@@ -21,13 +21,13 @@ public class Wordle {
     private static final String wordsFileName = "words_ru.txt";
 
     public static void main(String[] args) throws IOException {
+        //Создайте и используйте лог-файл, запись в который производится через специальный класс PrintWriter.
+        PrintWriter printWriter = new PrintWriter(logFileName);
         // Для отлова всех ошибок и их вывода в лог-файл выберите в коде метод,
         // который будет целиком охвачен try .. catch, например метод main.
         // Он должен обеспечивать возможность перехвата всех ошибок, возникающих
         // в ваших классах.
         try {
-            //Создайте и используйте лог-файл, запись в который производится через специальный класс PrintWriter.
-            PrintWriter printWriter = new PrintWriter(logFileName);
             // создать загрузчик словарей WordleDictionaryLoader
             WordleDictionaryLoader wordleDictionaryLoader = new WordleDictionaryLoader(wordsFileName);
             // загрузить словарь WordleDictionary с помощью класса WordleDictionaryLoader
@@ -36,16 +36,16 @@ public class Wordle {
             // Количество оставшихся шагов устанавливается равным шести.
             WordleGame wordleGame = new WordleGame(wordleDictionary, 6);
             // вызвать игровой метод в котором в цикле опрашивать пользователя и передавать информацию в игру
-            mainWordleGameCycle(wordleGame, printWriter);
+            mainWordleGameCycle(wordleGame);
             //  в конце для информации выводится загаданное слово.
             if (wordleGame.getSteps() == 0) // у игрока закончились шаги, а слово ещё не отгадано (это проигрыш).
                 System.out.println("Загаданное слово было: " + wordleGame.getAnswer());
         } catch (Exception e) {
-            e.printStackTrace();
+            printWriter.write(e);
         }
     }
 
-    private static void mainWordleGameCycle(WordleGame wordleGame, PrintWriter printWriter) throws IOException {
+    private static void mainWordleGameCycle(WordleGame wordleGame) throws IOException {
         Scanner sc = new Scanner(System.in);
         Random random = new Random();
         int randomIndex = random.nextInt(wordleGame.getDictionary().getWords().size());
