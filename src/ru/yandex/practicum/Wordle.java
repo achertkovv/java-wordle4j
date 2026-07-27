@@ -1,13 +1,10 @@
 package ru.yandex.practicum;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /*
 в главном классе нам нужно:
