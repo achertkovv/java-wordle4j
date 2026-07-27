@@ -38,17 +38,17 @@ class WordleTest {
         assertEquals("++---", wordleGame.analyzeWord("абвер"));
 
         wordleGame.fillHintWords("абвер");
+        //Проверить, сколько что число шагов не уменьшилось
+        assertEquals(6, wordleGame.getSteps());
 
         //Проверить, что подсказка заполнились, после передачи слова (должно быть не 0)
         assertNotEquals("", wordleGame.fillHintWords(""));
+        //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 5)
+        assertEquals(5, wordleGame.getSteps());
 
         //Проверить, кол-во подсказок изменилось (не должно быть равно 0)
         assertNotEquals(0, wordleGame.getHintWords().size());
 
-        //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
-        //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 5)
-        assertEquals(5, wordleGame.getSteps());
         //Уменьшаем счетчик шагов
         wordleGame.checkWord("абвер");
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 4)
