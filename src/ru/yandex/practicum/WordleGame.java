@@ -77,7 +77,12 @@ public class WordleGame {
         else result = new ArrayList<>(mapHintWords.keySet());
 
         if (word.isBlank()) {
-            word = result.getFirst();
+            // Исправление замечаний:
+            // По ТЗ компьютер подсказывает произвольное слово, у вас же всегда берется result.getFirst(),
+            // то есть первое по алфавиту. При повторном запросе игрок будет получать один и тот же вариант.
+            Random random = new Random();
+            int randomIndex = random.nextInt(result.size());
+            word = result.get(randomIndex);
             steps--; //Если слово подходит под правила игры, то количество попыток уменьшается
         }
         String pattern = analyzeWord(word);
@@ -98,7 +103,7 @@ public class WordleGame {
         for (int i = 0; i < pattern.length(); i++)
             if (pattern.charAt(i) == '+' || pattern.charAt(i) == '^') includeChars.append(word.charAt(i));
 
-        List<String> include = WordleDictionary.containsCharsInTheList(result, includeChars.toString());
+        List<String> include = WordleDictionary.containsAllCharsInTheList(result, includeChars.toString());
 
         listToMap(include);
 

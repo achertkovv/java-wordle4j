@@ -43,7 +43,9 @@ public class WordleDictionaryLoader {
                 if (word.length() == 5) {
                     // Дополнительно вам нужно привести слова к единой
                     // форме в нижнем регистре и заменить букву ё на букву е
-                    wordleDictionary.addWord(word.toLowerCase().replace("ё", "e"));
+                    // Исправление замечаний:
+                    // В обоих местах в replace("ё", "e") подставляется, судя по коду, латинская e, а не кириллическая
+                    wordleDictionary.addWord(word.toLowerCase().replace("ё", "е"));
                 }
             }
         } catch (IOException e) {

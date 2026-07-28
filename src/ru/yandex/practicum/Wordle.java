@@ -37,9 +37,6 @@ public class Wordle {
             WordleGame wordleGame = new WordleGame(wordleDictionary, 6);
             // вызвать игровой метод в котором в цикле опрашивать пользователя и передавать информацию в игру
             mainWordleGameCycle(wordleGame);
-            //  в конце для информации выводится загаданное слово.
-            if (wordleGame.getSteps() == 0) // у игрока закончились шаги, а слово ещё не отгадано (это проигрыш).
-                System.out.println("Загаданное слово было: " + wordleGame.getAnswer());
         } catch (Exception e) {
             printWriter.write(e);
         }
@@ -62,7 +59,9 @@ public class Wordle {
                 String word = sc.nextLine();
                 // Дополнительно вам нужно привести слова к единой
                 // форме в нижнем регистре и заменить букву ё на букву е
-                word = word.toLowerCase().replace("ё", "e");
+                // Исправление замечаний:
+                // В обоих местах в replace("ё", "e") подставляется, судя по коду, латинская e, а не кириллическая
+                word = word.toLowerCase().replace("ё", "е");
                 // Дополнительно программа проверяет, что слово соответствует правилам:
                 // состоит из пяти букв и присутствует в словаре. Если слово корректное,
                 // ход засчитывается, иначе программа будет повторно ожидать ввод
@@ -78,7 +77,12 @@ public class Wordle {
                 if (wordleGame.compareWord(word)) {
                     System.out.println("Вы угадали слово и выиграли!");
                     break; // Если слово отгадано, игра завершается. Игрок отгадал слово (это выигрыш);
+                } else if (wordleGame.getSteps() == 0) { // у игрока закончились шаги, а слово ещё не отгадано (это проигрыш).
+                    // в конце для информации выводится загаданное слово.
+                    System.out.println("Загаданное слово было: " + wordleGame.getAnswer());
+                    break;
                 }
+
                 System.out.println(word);
                 System.out.println(wordleGame.analyzeWord(word));
             } catch (WordNotFoundInDictionary | WordLengthIsNotValid e) {

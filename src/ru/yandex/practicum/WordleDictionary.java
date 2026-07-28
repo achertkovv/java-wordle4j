@@ -42,6 +42,26 @@ public class WordleDictionary {
         return result;
     }
 
+    public static List<String> containsAllCharsInTheList(List<String> list, String chars) {
+        List<String> result = new ArrayList<>();
+        Set<Character> distinctChars = new HashSet<>();
+        boolean wordContainsAllChars;
+        for (char ch : chars.toCharArray()) {
+            distinctChars.add(ch);
+        }
+        for (String word : list) {
+            wordContainsAllChars = true;
+            for (char c : distinctChars) {
+                if (!word.contains(String.valueOf(c))) {
+                    wordContainsAllChars = false;
+                    break;
+                }
+            }
+            if (wordContainsAllChars) result.add(word);
+        }
+        return result;
+    }
+
     public static List<String> containsCharsInTheListByIndex(List<String> list, char c, int i) {
         List<String> result = new ArrayList<>();
         for (String word : list) {
