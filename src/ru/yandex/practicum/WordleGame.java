@@ -72,17 +72,13 @@ public class WordleGame {
     }
 
     public String fillHintWords(String word) {
-        List<String> result;
-        if (mapHintWords.isEmpty()) result = new ArrayList<>(dictionary.getWords());
-        else result = new ArrayList<>(mapHintWords.keySet());
-
         if (word.isBlank()) {
             // Исправление замечаний:
             // По ТЗ компьютер подсказывает произвольное слово, у вас же всегда берется result.getFirst(),
             // то есть первое по алфавиту. При повторном запросе игрок будет получать один и тот же вариант.
             Random random = new Random();
-            int randomIndex = random.nextInt(result.size());
-            word = result.get(randomIndex);
+            int randomIndex = random.nextInt(dictionary.getWords().size());
+            word = dictionary.getWords().get(randomIndex);
             steps--; //Если слово подходит под правила игры, то количество попыток уменьшается
         }
         String pattern = analyzeWord(word);
@@ -92,49 +88,54 @@ public class WordleGame {
         for (int i = 0; i < pattern.length(); i++)
             if (pattern.charAt(i) == '-') excludeChars.append(word.charAt(i));
 
-        List<String> exclude = WordleDictionary.containsCharsInTheList(result, excludeChars.toString());
+        List<String> exclude = dictionary.containsCharsInTheList(excludeChars.toString());
 
-        result.removeAll(exclude);
+        dictionary.removeWords(exclude);
 
-        listToMap(result);
+        listToMap();
 
         // Затем из оставшихся слов надо выбрать те, в которых все необходимые буквы присутствуют.
         StringBuilder includeChars = new StringBuilder();
         for (int i = 0; i < pattern.length(); i++)
             if (pattern.charAt(i) == '+' || pattern.charAt(i) == '^') includeChars.append(word.charAt(i));
 
-        List<String> include = WordleDictionary.containsAllCharsInTheList(result, includeChars.toString());
+        List<String> include = dictionary.containsAllCharsInTheList(includeChars.toString());
 
-        listToMap(include);
+        dictionary.setWords(include);
+
+        listToMap();
 
         // Далее из подходящих слов выбираются те, в которых нужные буквы находятся на нужных местах
         // (если игроку удалось угадать хоть одну такую букву).
-        List<String> resultByIndex = new ArrayList<>();
+        HashMap<Character, Integer> charsPisitionMap = new HashMap<>();
         for (int i = 0; i < pattern.length(); i++) {
             if (pattern.charAt(i) == '+') {
-                List<String> wordsByIndex = WordleDictionary.containsCharsInTheListByIndex(include, word.charAt(i), i);
-                resultByIndex.addAll(wordsByIndex);
+                charsPisitionMap.put(word.charAt(i), i);
             }
         }
 
-        listToMap(resultByIndex);
+        include = dictionary.containsCharsInTheListByIndex(charsPisitionMap);
 
-        List<Map.Entry<String, Integer>> entries =
+        dictionary.setWords(include);
+
+        listToMap();
+
+/*        List<Map.Entry<String, Integer>> entries =
                 new ArrayList<>(mapHintWords.entrySet());
         entries.sort(new Comparator<Map.Entry<String, Integer>>() {
             @Override
             public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
                 return a.getValue().compareTo(b.getValue());
             }
-        });
+        });*/
 
         return word;
     }
 
-    private void listToMap(List<String> result) {
-        if (!result.isEmpty()) {
+    private void listToMap() {
+        if (!dictionary.getWords().isEmpty()) {
             mapHintWords.clear();
-            for (String s : result) {
+            for (String s : dictionary.getWords()) {
                 mapHintWords.put(s, mapHintWords.getOrDefault(s, 0) + 1);
             }
         }

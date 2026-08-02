@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 public class Wordle {
 
-    private static final String logFileName = "Errors.log";
+    private static final String logFileName = "errors.log";
     private static final String wordsFileName = "words_ru.txt";
 
     public static void main(String[] args) throws IOException {
@@ -74,6 +74,9 @@ public class Wordle {
                     printHintWords(wordleGame);
                 }
 
+                System.out.println(word);
+                System.out.println(wordleGame.analyzeWord(word));
+
                 if (wordleGame.compareWord(word)) {
                     System.out.println("Вы угадали слово и выиграли!");
                     break; // Если слово отгадано, игра завершается. Игрок отгадал слово (это выигрыш);
@@ -82,9 +85,6 @@ public class Wordle {
                     System.out.println("Загаданное слово было: " + wordleGame.getAnswer());
                     break;
                 }
-
-                System.out.println(word);
-                System.out.println(wordleGame.analyzeWord(word));
             } catch (WordNotFoundInDictionary | WordLengthIsNotValid e) {
                 System.out.println(e.getMessage());
             }

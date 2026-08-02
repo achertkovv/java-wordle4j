@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class WordleDictionary {
 
-    private final List<String> words;
+    private List<String> words;
 
     public WordleDictionary() {
         this.words = new ArrayList<>();
@@ -17,6 +17,11 @@ public class WordleDictionary {
 
     public List<String> getWords() {
         return words;
+    }
+
+    public void setWords(List<String> updateWords) {
+        if (!updateWords.isEmpty())
+            this.words = new ArrayList<>(updateWords);
     }
 
     public boolean containsWord(String word) {
@@ -27,29 +32,32 @@ public class WordleDictionary {
         words.add(word);
     }
 
-    public static List<String> containsCharsInTheList(List<String> list, String chars) {
+    public void removeWords(List<String> excludeWords) {
+        words.removeAll(excludeWords);
+    }
+
+    public List<String> containsCharsInTheList(String chars) {
         List<String> result = new ArrayList<>();
         Set<Character> distinctChars = new HashSet<>();
         for (char ch : chars.toCharArray()) {
             distinctChars.add(ch);
         }
         for (char c : distinctChars) {
-            for (String word : list) {
-                if (word.contains(String.valueOf(c)))
-                    result.add(word);
+            for (String word : words) {
+                if (word.contains(String.valueOf(c))) result.add(word);
             }
         }
         return result;
     }
 
-    public static List<String> containsAllCharsInTheList(List<String> list, String chars) {
+    public List<String> containsAllCharsInTheList(String chars) {
         List<String> result = new ArrayList<>();
         Set<Character> distinctChars = new HashSet<>();
         boolean wordContainsAllChars;
         for (char ch : chars.toCharArray()) {
             distinctChars.add(ch);
         }
-        for (String word : list) {
+        for (String word : words) {
             wordContainsAllChars = true;
             for (char c : distinctChars) {
                 if (!word.contains(String.valueOf(c))) {
@@ -62,11 +70,13 @@ public class WordleDictionary {
         return result;
     }
 
-    public static List<String> containsCharsInTheListByIndex(List<String> list, char c, int i) {
+    public  List<String> containsCharsInTheListByIndex(Map<Character, Integer> charsPisitionMap) {
         List<String> result = new ArrayList<>();
-        for (String word : list) {
-            if (word.charAt(i) == c) {
-                result.add(word);
+        for (String word : words) {
+            for (Map.Entry<Character, Integer> entry : charsPisitionMap.entrySet()) {
+                if (word.charAt(entry.getValue()) == entry.getKey()) {
+                    result.add(word);
+                }
             }
         }
         return result;
