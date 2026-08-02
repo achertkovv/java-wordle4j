@@ -51,24 +51,26 @@ class WordleTest {
         //Проверить, кол-во подсказок изменилось (не должно быть равно 0)
         assertNotEquals(0, wordleGame.getHintWords().size());
 
+        String hintWord = wordleGame.getDictionary().getWords().getFirst();
+
         //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
+        wordleGame.checkWord(hintWord);
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 4)
         assertEquals(4, wordleGame.getSteps());
         //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
+        wordleGame.checkWord(hintWord);
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 3)
         assertEquals(3, wordleGame.getSteps());
         //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
+        wordleGame.checkWord(hintWord);
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 2)
         assertEquals(2, wordleGame.getSteps());
         //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
+        wordleGame.checkWord(hintWord);
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 1)
         assertEquals(1, wordleGame.getSteps());
         //Уменьшаем счетчик шагов
-        wordleGame.checkWord("абвер");
+        wordleGame.checkWord(hintWord);
         //Проверить, сколько что число шагов уменьшилось на 1 (должно стать 0)
         assertEquals(0, wordleGame.getSteps());
     }
